@@ -15,6 +15,5 @@ Gem::Specification.new do |spec|
   spec.files                 = Dir['README.md', 'LICENSE', 'CHANGELOG.md',
                                    'lib/**/*.rb', 'lib/**/*.rake', 'double_checker.gemspec']
 
-  spec.add_development_dependency 'rubocop', '~> 1.5'
   spec.metadata['rubygems_mfa_required'] = 'true'
 end

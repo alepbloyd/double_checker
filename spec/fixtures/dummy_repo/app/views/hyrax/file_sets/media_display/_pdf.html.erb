@@ -1,0 +1,38 @@
+
+<% if Hyrax.config.display_media_download_link? %>
+<div>
+  <h2 class="sr-only"><%= t('hyrax.file_set.show.downloadable_content.heading') %></h2>
+  <%= image_tag thumbnail_url(file_set),
+                class: "representative-media",
+                alt: "Preview of #{file_set.title[0]}",
+                role: "presentation" %>
+  <% if file_set.visibility == 'open' %>
+    <%= link_to t('hyrax.file_set.show.downloadable_content.pdf_download'),
+              hyrax.download_path(file_set, :disposition => "attachment"),
+              target: :_blank,
+              id: "file_download",
+              data: { label: file_set.id },
+              class: "gw-btn" %>
+    <p></p>
+    <%= link_to t('hyrax.file_set.show.downloadable_content.pdf_new_tab'),
+              hyrax.download_path(file_set, :disposition => "inline"),
+              target: :_blank,
+              id: "file_open",
+              data: { label: file_set.id },
+              class: "gw-btn" %>
+    <% if (Rails.configuration.respond_to?(:accessibility_url)) && (@presenter.respond_to?(:permanent_url)) %>
+      <p class="accessibility-form-link"/><%= link_to t('hyrax.accessibility.link_label'),
+        Rails.configuration.accessibility_url % {gwss_item_url: u(@presenter.permanent_url)},
+        id: "accessibility_form",
+        target: "_new" %>
+   <% end %> 
+  <% end %>
+</div>
+<% else %>
+<div>
+  <%= image_tag thumbnail_url(file_set),
+                class: "representative-media",
+                alt: "Preview of #{file_set.title[0]}",
+                role: "presentation" %>
+</div>
+<% end %>
