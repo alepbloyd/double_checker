@@ -6,7 +6,7 @@ AllCops:
   TargetRubyVersion: 2.7
   NewCops: enable
 
-GemSpec/DevelopmentDependencies:
+Gemspec/DevelopmentDependencies:
   Enabled: true
 
 Style/Documentation:
