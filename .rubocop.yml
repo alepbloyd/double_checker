@@ -11,3 +11,9 @@ GemSpec/DevelopmentDependencies:
 
 Style/Documentation:
   Enabled: false
+
+RSpec/MultipleExpectations:
+  Enabled: false
+
+Lint/EmptyFile:
+  Enabled: false
