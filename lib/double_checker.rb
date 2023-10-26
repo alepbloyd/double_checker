@@ -6,8 +6,14 @@ module DoubleChecker
   class << self
     attr_accessor :gem_path, :repo_path, :result_path
 
+    attr_writer :result_line_width
+
     def config
       yield self
+    end
+
+    def result_line_width
+      @result_line_width || 30
     end
 
     def folders_in_repo(relative_path)
@@ -82,9 +88,7 @@ module DoubleChecker
       repo_line_arr - (gem_line_arr & repo_line_arr)
     end
 
-    def create_comparision_file(file_path)
-      width = 20
-
+    def create_comparision_file(file_path, line_width = 30)
       gem_line_arr = create_line_array(gem_path + file_path)
       repo_line_arr = create_line_array(repo_path + file_path)
 
@@ -92,15 +96,16 @@ module DoubleChecker
 
       header = 
       <<~EOS
-      #{" " * width}REPO#{" " * width}||#{" " * width}GEM#{" " * width}
-      #{"-" * (width * 4) + "-" * 7}
+      #{"  |" + " " * line_width}REPO#{" " * line_width}||#{" " * line_width}GEM#{" " * line_width}
+      #{"-" * (line_width * 4) + ("-" * 7)}
       EOS
 
       text_to_write += header
 
       gem_line_arr.each_with_index do |line, line_num|
         if line == create_line_array(repo_path + file_path)[line_num]
-          text_to_write += (line_num.to_s + " -- " + line + "\n")
+          text_to_write += ((line_num + 1).to_s + " | " + line)
+          text_to_write += "\n"
         end
         # text_to_write += (line_num.to_s + " -- ")
       end
@@ -108,6 +113,7 @@ module DoubleChecker
       # lines_only_in_gem(file_path).each_with_index do |line, line_num|
       #   text_to_write += (line_num.to_s + "---" + line + "\n")
       # end
+      text_to_write += "#{"-" * (line_width * 4) + ("-" * 7)}"
 
       File.write(result_path + file_path + "/DIFF.txt", text_to_write)
     end
