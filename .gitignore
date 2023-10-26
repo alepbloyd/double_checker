@@ -13,4 +13,4 @@ pkg/*
 
 demo.rb
 
-spec/tmp/*
+spec/result/*
