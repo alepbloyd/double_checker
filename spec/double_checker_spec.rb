@@ -33,7 +33,7 @@ RSpec.describe DoubleChecker do
   end
 
   it 'defaults to a result line width config of 30' do
-    expect(described_class.result_line_width).to eq(30)
+    expect(described_class.result_line_width).to eq(50)
   end
   
   it 'can use a different line width config' do

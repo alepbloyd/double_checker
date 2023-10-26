@@ -13,7 +13,7 @@ module DoubleChecker
     end
 
     def result_line_width
-      @result_line_width || 30
+      @result_line_width || 50
     end
 
     def folders_in_repo(relative_path)
@@ -88,33 +88,42 @@ module DoubleChecker
       repo_line_arr - (gem_line_arr & repo_line_arr)
     end
 
-    def create_comparision_file(file_path, line_width = 30)
+    def create_comparision_file(file_path)
       gem_line_arr = create_line_array(gem_path + file_path)
-      repo_line_arr = create_line_array(repo_path + file_path)
+      repo_line_arr = create_line_array(repo_path + file_path)      
+      
+      if gem_line_arr.length > repo_line_arr.length
+        (gem_line_arr.length - repo_line_arr.length).times do
+          repo_line_arr.append("")
+        end
+      end
+
+      zipped = repo_line_arr.zip(gem_line_arr)
+
+      max_length = 0
+      zipped.flatten.map do |line|
+        if !line.nil? && line.length > max_length
+          max_length = line.length
+        end
+      end
+
+      self.result_line_width = max_length
 
       text_to_write = ""
 
       header = 
       <<~EOS
-      #{"  |" + " " * line_width}REPO#{" " * line_width}||#{" " * line_width}GEM#{" " * line_width}
-      #{"-" * (line_width * 4) + ("-" * 7)}
+      #{"   |" + " " * (self.result_line_width / 2)}REPO#{" " * (self.result_line_width / 2)}||#{" " * (self.result_line_width / 2)}GEM#{" " * (self.result_line_width / 2)}
+      #{"-" * (self.result_line_width * 2 + 10)}
       EOS
 
       text_to_write += header
 
-      gem_line_arr.each_with_index do |line, line_num|
-        if line == create_line_array(repo_path + file_path)[line_num]
-          text_to_write += ((line_num + 1).to_s + " | " + line)
-          text_to_write += "\n"
-        end
-        # text_to_write += (line_num.to_s + " -- ")
+      zipped.each_with_index do |couplet,index|
+        text_to_write += "#{(index + 1).to_s.ljust(2, " ")} | #{couplet.first} #{" " * (self.result_line_width - couplet.first.length)} || #{couplet.last}"
+        text_to_write += "\n"
       end
-
-      # lines_only_in_gem(file_path).each_with_index do |line, line_num|
-      #   text_to_write += (line_num.to_s + "---" + line + "\n")
-      # end
-      text_to_write += "#{"-" * (line_width * 4) + ("-" * 7)}"
-
+      
       File.write(result_path + file_path + "/DIFF.txt", text_to_write)
     end
 

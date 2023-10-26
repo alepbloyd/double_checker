@@ -4,3 +4,21 @@
 # Hey this is the third line (both)
 # Hey this is the fourth line (repo)
 # Hey this is the fifth line (repo)
+
+[1,2,3,4].each do |num|
+  num ** 2
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+# a line that's even further down!
