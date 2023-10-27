@@ -4,6 +4,8 @@ source 'http://rubygems.org'
 
 gemspec
 
+gem 'railties'
+
 group :development do
   gem 'pry'
   gem 'rake', '~> 13.0'
