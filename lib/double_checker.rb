@@ -5,7 +5,7 @@ require 'double_checker/railtie' if defined?(Rails)
 
 module DoubleChecker
   class << self
-    attr_accessor :gem_path, :repo_path, :result_path
+    attr_accessor :gem_path, :repo_path, :result_path, :ignore_file
 
     attr_writer :result_line_width
 
@@ -54,7 +54,7 @@ module DoubleChecker
         full_overlap_file_array(path, overlap_arr)
       end
 
-      overlap_arr
+      overlap_arr.reject { |file| files_to_ignore.include?(file) }
     end
 
     def create_result_folder
@@ -137,6 +137,22 @@ module DoubleChecker
         copy_repo_file(file_path)
         create_comparision_file(file_path)
       end
+    end
+
+    def files_to_ignore
+      files = []
+
+      lines = []
+      File.readlines(self.ignore_file, chomp: true).each do |line|
+        lines << line
+      end
+      lines = lines.reject { |line| line.empty? }
+
+      lines.each do |line|
+        files << Dir.glob("#{repo_path + line}").reject { |f| File.directory?(f) }
+      end
+
+      files.flatten.map {|file| file.split(repo_path).last}
     end
   end
 end
