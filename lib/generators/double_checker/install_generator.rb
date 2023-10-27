@@ -14,7 +14,7 @@ module DoubleChecker
       end
 
       def copy_ignore_file
-        template '.double_checker_ignore', "#{Rails.root}/.double_checker_ignore"
+        template 'double_checker_ignore', "#{Rails.root}/.double_checker_ignore"
       end
     end
   end
