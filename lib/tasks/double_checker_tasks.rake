@@ -3,7 +3,7 @@ require "#{Rails.root}/config/double_checker"
 
 namespace :double_checker do
 
-  task :install do
+  task :run do
     t
   end
 
