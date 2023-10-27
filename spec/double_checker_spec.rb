@@ -9,6 +9,7 @@ RSpec.describe DoubleChecker do
       c.gem_path = "#{File.expand_path('.')}/spec/fixtures/gem"
       c.repo_path = "#{File.expand_path('.')}/spec/fixtures/repo"
       c.result_path = "#{File.expand_path('.')}/spec/result"
+      c.ignore_file = "#{File.expand_path('.')}/spec/.double_checker_ignore"
     end
 
     FileUtils.rm_rf("#{File.expand_path('.')}/spec/result")
@@ -30,6 +31,10 @@ RSpec.describe DoubleChecker do
 
   it 'can set result path config' do
     expect(described_class.result_path).to eq("#{File.expand_path('.')}/spec/result")
+  end
+
+  it 'can set ignore file path in config' do
+    expect(described_class.ignore_file).to eq("#{File.expand_path('.')}/spec/.double_checker_ignore")
   end
 
   it 'defaults to a result line width config of 30' do
@@ -160,8 +165,17 @@ RSpec.describe DoubleChecker do
   xit 'creates a comparison file showing the differences' do
   end
 
-  xit 'ignores files included in the .double_checker_ignore file' do
+  it 'loads list of files from .double_checker_ignore file' do
+    expect(described_class.files_to_ignore).to include('/ignore_me.md',
+                                                       '/ignore_this_folder/ignore_this.txt')
+  end
+
+  it 'ignores files included in the .double_checker_ignore file' do
     expect(described_class.full_overlap_file_array).not_to include('/ignore_me.md')
+  end
+
+  it 'ignores folders included in the .double_checker_ignore file' do
+    expect(described_class.full_overlap_file_array).not_to include('/ignore_this_folder/ignore_this.txt')
   end
 
   xit 'counts the number of overlap files with each file extension' do
