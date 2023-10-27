@@ -7,7 +7,7 @@ module DoubleChecker
     class InstallGenerator < Rails::Generators::Base
       source_root File.expand_path('../templates', __dir__)
 
-      desc 'Create a DoubleChecker config file'
+      desc 'Create a config/double_checker.rb file and /.double_checker_ignore file'
 
       def copy_config
         template 'double_checker_config.rb', "#{Rails.root}/config/double_checker.rb"
